@@ -1,0 +1,463 @@
+
+
+Activity: 47
+Merit: 11
+
+
+View Profile
+	
+How do I double spend using electrum for fix unconfirmed transaction?
+April 19, 2021, 06:15:31 PM
+ #1
+I have two Blockchain.com wallets.(Both of them are mine)  
+Some days ago i did a big mistake.  
+I sent 1100$ From wallet #1 to wallet #2. (10.0 sat/vB > As you see this is very very low) (TX LINK)  
+And i sent  that 1100$ to my friend from wallet #2 after the transaction upper immediately. (99.3 sat/vB) (TX LINK)  
+Because of low fee in first transaction, both transactions have n't confirmed yet.  
+I asked people to fix these unconfirmed transactions.  
+They told me use another wallet like Electrum wallet and double spend those unconfirmed transactions.  
+So i installed Electrum in my windows 7 os.  
+For double spend using electrum i found this link :  
+https://steemit.com/bitcoin/@profitgenerator/tutorial-how-to-fix-unconfirmed-transactions
+But it seems it has deprecated.  
+I could n't understand one part of this tutorial :  
+ Re-create the transaction, but this time put a higher fee.  
+> Sign your transaction, and save it to a file, it should end with .txn extension
+
+My questions :
+1. As you know Blockchain.Com has no RBF option. So those two transactions have n't RBF flag.
+In this situation can i use double spend with electrum?
+2. How can i create a transaction in offline mode and sign and save it?  
+I tried it.
+But after setting fee and click send button electrum tried to broadcast.
+And i could n't find an option for sign or save transaction with .txn ex.  
+Would you please share a complete step by step tut about this.  
+3. If i double spend first transaction what happen to second unconfirmed one? (I am a bit confused about this)
+4. Should i double spend two unconfirmed transactions with two temp wallets in electrum or double send of first one is enough?
+ 
+ Advertised sites are not endorsed by the Bitcoin Forum. They may be unsafe, untrustworthy, or illegal in your jurisdiction. Advertise here.
+Charles-Tim
+Hero Member
+*****
+
+
+Activity: 728
+Merit: 2342
+
+
+
+Pay 2 and get 4? Sorry you have been scammed.
+
+
+View Profile
+	
+Re: How do I double spend using electrum for fix unconfirmed transaction?
+April 19, 2021, 06:48:28 PM	
+ #2
+First of all, you need to know how to differentiate between transaction size and weight. Sat/vbyte is using weight while sat/byte is using size. Blockchain.com wallet is using legacy addresses, that makes the weight of the transaction you are making to be higher than using nested segwit and native segwit addresses. Do you know you can safe 42% fee or higher while using native segwit addresses, and also you can still safe much fee even if using nested segwit addresses. That is why I will recommend you not to use blockchain.com wallet again as it did not support segwit. Be using electrum, it generates native segwit by default, you will be able to pay much lesser fee. You can read the link below to understand more about this.
+
+Minimizing bitcoin transaction fee
+
+Quote from: Vort3x.Layers on April 19, 2021, 06:15:31 PM
+1. As you know Blockchain.Com has no RBF option. So those two transactions have n't RBF flag.
+In this situation can i use double spend with electrum?
+Double spending in this case means you will be able to use RBF to pump the fee, so that the transaction can be confirmed earlier, although another txid will be generated, but if high fee is paid, the transaction will be confirmed earlier. But, both your transactions are not supporting RBF, which means you can not double spend it.
+
+Quote from: Vort3x.Layers on April 19, 2021, 06:15:31 PM
+2. How can i create a transaction in offline mode and sign and save it? 
+I tried it.
+This is another question entirely, and does not related to the reason why your transaction is stuck, but this is the procedure (for safety reasons):
+
+On computer:
+https://electrum.readthedocs.io/en/latest/coldstorage.html
+
+On mobile:
+https://bitcointalk.org/index.php?topic=5237614.msg54149363#msg54149363
+
+
+Quote from: Vort3x.Layers on April 19, 2021, 06:15:31 PM
+3. If i double spend first transaction what happen to second unconfirmed one? (I am a bit confused about this)
+If you pump the fee for the first transaction, if sufficient fee is used, the transaction will be confirmed in time, and this will increase the chance of the second transaction to get confirmed earlier as it has no unconfirmed parent transaction again. But 99 sat/vbyte while sending from legacy address to nested segwit address is not enough fee for now as the mempool is congested ever than before for now, it may still take long for the child (second) transaction to be confirmed. But if RBF is supported for the child transaction as well,  you can decide to pump the fee also, But, both transactions do not support RBF, and you can not use it. Better try to wait until the mempool is very well less congested.
+
+Quote from: o_e_l_e_o on April 20, 2021, 09:26:54 AM
+Quote from: Charles-Tim on April 19, 2021, 06:48:28 PM
+If you pump the fee for the first transaction, if sufficient fee is used, the transaction will be confirmed in time, and this will increase the chance of the second transaction to get confirmed earlier as it has no unconfirmed parent transaction again.
+This is not correct. If you double spend the unconfirmed parent transaction or pump its fee with RBF, then this means the parent transaction is being replaced with a brand new transaction. Doing so will invalidate the unconfirmed child transaction. Even if your new parent transaction sends the same amount of bitcoin to the same address(es) as used by the unconfirmed child transaction, your new parent transaction will have a different TXID from the one it is replacing (since something else will be different about the transaction - at a minimum, how much is being paid as a fee). Since transactions rely on the TXID of previous transactions to identify which inputs to use, by changing the TXID of your parent transaction, the inputs the child transaction uses will no longer exist and so the child transaction will be invalid. You would have to recreate your child transaction using the new outputs from your new parent transaction.
+
+The only way to pump the fee of the parent without invalidating the child would be to use CPFP on a different output from the parent, which will speed it up without replacing it with a different transaction.
+
+
+Quote from: Vort3x.Layers on April 19, 2021, 06:15:31 PM
+4. Should i double spend two unconfirmed transactions with two temp wallets in electrum or double send of first one is enough?
+Both the transaction do not support replace-by-fee (RBF), so you can not pump the fee, which means you can not double spend any of the transaction.
+I will advice you not to use blockchain.com wallet again, it is not supporting segwit transactions, and also not support RBF. If you need a wallet that support both, use electrum. Electrum can help you in the case like this, while you can pump the fee by double spending the bitcoin with higher fee, and yet using segwit for lower fee.
+.BEST..CHANGE.	███████████████
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██	
+BEST
+EXCHANGE
+RATES
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██
+███████████████
+..BUY/ SELL CRYPTO..
+jackg
+Copper Member
+Legendary
+*
+
+
+Activity: 2380
+Merit: 2404
+
+
+
+https://bit.ly/387FXHi ← lightning theory
+
+
+View Profile
+	
+Re: How do I double spend using electrum for fix unconfirmed transaction?
+April 19, 2021, 06:49:21 PM
+ #3
+You can instead just select the transaction on an online version of electrum, right click it and select "bump fee" which will open up a window to allow you to increase the fee and broadcast it.
+
+░░░░░▄▄██████▄▄
+░░▄████▀▀▀▀▀▀████▄
+░███▀░░░░░░░░░░▀█▀█
+███░░░▄██████▄▄░░░██
+░░░░░█████████░░░░██▌
+░░░░█████████████████
+░░░░█████████████████
+░░░░░████████████████
+███▄░░▀██████▀░░░███
+█▀█▄▄░░░░░░░░░░▄███
+░░▀████▄▄▄▄▄▄████▀
+░░░░░▀▀██████▀▀
+.ChipMixer.{ MIXING REINVENTED FOR YOUR PRIVACY #.ChipMixer.
+
+░░░░░▄▄██████▄▄
+░░▄████▀▀▀▀▀▀████▄
+░███▀░░░░░░░░░░▀█▀█
+███░░░▄██████▄▄░░░██
+░░░░░█████████░░░░██▌
+░░░░█████████████████
+░░░░█████████████████
+░░░░░████████████████
+███▄░░▀██████▀░░░███
+█▀█▄▄░░░░░░░░░░▄███
+░░▀████▄▄▄▄▄▄████▀
+░░░░░▀▀██████▀▀
+Charles-Tim
+Hero Member
+*****
+
+
+Activity: 728
+Merit: 2342
+
+
+
+Pay 2 and get 4? Sorry you have been scammed.
+
+
+View Profile
+	
+Re: How do I double spend using electrum for fix unconfirmed transaction?
+April 19, 2021, 07:11:40 PM
+ #4
+Quote from: jackg on April 19, 2021, 06:49:21 PM
+You can instead just select the transaction on an online version of electrum, right click it and select "bump fee" which will open up a window to allow you to increase the fee and broadcast it.
+It is possible. But, he can not, as the parent transaction did not support replace-by-fee, even also the child transaction is not supporting replace-by-fee, there will be no option to pump the fee. To get the transaction unstuck, his friend (wallet C) needs to create another CPFP in which RBF will be enabled for any unstucking reasons that might surface out (but not necessary if a very high fee that can get all he transactions confirmed is used), paying very high transaction fee for another CPFP transaction that will get the transactions confirmed, but the fee that will make all the transactions confirmed will be very high, and the reason it is not advisable for now. Waiting for the mempool to be less congested is the best in this case, in my opinion (as making use of paid accelerator also will still demand for very high transaction fee).
+.BEST..CHANGE.	███████████████
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██	
+BEST
+EXCHANGE
+RATES
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██
+██
+███████████████
+..BUY/ SELL CRYPTO..
+Vort3x.Layers
+Jr. Member
+*
+
+
+Activity: 47
+Merit: 11
+
+
+View Profile
+	
+Re: How do I double spend using electrum for fix unconfirmed transaction?
+April 20, 2021, 02:55:07 AM	
+ #5
+@Charles-Tim Thanks for your answers.
+Did you read this link carefully :
+tutorial-how-to-fix-unconfirmed-transactions
+Specially this part :
+Quote
+The solution:
+
+    RBF (Replace by fee) Transaction, if it's supported by your wallet
+    Double-Spend the transaction and put a higher fee manually
+
+Now the RBF should be straightforward, but not all wallets support it, so I am going to show you the hard and long way to fix it, by teaching you how to double-spend a transaction.
+What is that mean?
+Means harder way has nothing to do with RBF! Am i right?
+This is why i confused between RBFand double spending.
+If those two parent & child transactions have RBF flagged i simply could choose easy way and right click on transaction and do replace-by-fee.
+Question #2 solved by this link :
+how-to-create-a-signed-transaction-offline-using-electrum
+Now i am ready for double spend.
+So please review my questions #1,#3,#4 again and answer them.
+pooya87
+Legendary
+*
+
+
+Activity: 2632
+Merit: 5909
+
+
+
+Blue:2017 Red:2021
+
+
+View Profile
+	
+Re: How do I double spend using electrum for fix unconfirmed transaction?
+April 20, 2021, 03:18:44 AM
+ #6
+Quote from: Vort3x.Layers on April 20, 2021, 02:55:07 AM
+So please review my questions #1,#3,#4 again and answer them.
+1. Yes you can but it may be rejected by the noes that receive it.
+3. When a transaction is not signalling RBF and a new transaction is received by the node that has the first one, that node considers the second tx to be a double spend and rejects it. This means if the node you are connected to has the first tx it will reject the second one and it won't propagate.
+4. No need, you can use one wallet instance to do everything. The challenge you would be facing is to get the nodes to accept your double spent transaction.
+
+░░░░░▄▄██████▄▄
+░░▄████▀▀▀▀▀▀████▄
+░███▀░░░░░░░░░░▀█▀█
+███░░░▄██████▄▄░░░██
+░░░░░█████████░░░░██▌
+░░░░█████████████████
+░░░░█████████████████
+░░░░░████████████████
+███▄░░▀██████▀░░░███
+█▀█▄▄░░░░░░░░░░▄███
+░░▀████▄▄▄▄▄▄████▀
+░░░░░▀▀██████▀▀
+.ChipMixer.{ MIXING REINVENTED FOR YOUR PRIVACY #.ChipMixer.
+
+░░░░░▄▄██████▄▄
+░░▄████▀▀▀▀▀▀████▄
+░███▀░░░░░░░░░░▀█▀█
+███░░░▄██████▄▄░░░██
+░░░░░█████████░░░░██▌
+░░░░█████████████████
+░░░░█████████████████
+░░░░░████████████████
+███▄░░▀██████▀░░░███
+█▀█▄▄░░░░░░░░░░▄███
+░░▀████▄▄▄▄▄▄████▀
+░░░░░▀▀██████▀▀
+o_e_l_e_o
+Legendary
+*
+
+
+Activity: 1568
+Merit: 8933
+
+
+
+Wear a mask, slow the spread
+
+
+View Profile
+	
+Re: How do I double spend using electrum for fix unconfirmed transaction?
+April 20, 2021, 09:26:54 AM
+ #7
+Quote from: Charles-Tim on April 19, 2021, 06:48:28 PM
+If you pump the fee for the first transaction, if sufficient fee is used, the transaction will be confirmed in time, and this will increase the chance of the second transaction to get confirmed earlier as it has no unconfirmed parent transaction again.
+This is not correct. If you double spend the unconfirmed parent transaction or pump its fee with RBF, then this means the parent transaction is being replaced with a brand new transaction. Doing so will invalidate the unconfirmed child transaction. Even if your new parent transaction sends the same amount of bitcoin to the same address(es) as used by the unconfirmed child transaction, your new parent transaction will have a different TXID from the one it is replacing (since something else will be different about the transaction - at a minimum, how much is being paid as a fee). Since transactions rely on the TXID of previous transactions to identify which inputs to use, by changing the TXID of your parent transaction, the inputs the child transaction uses will no longer exist and so the child transaction will be invalid. You would have to recreate your child transaction using the new outputs from your new parent transaction.
+
+The only way to pump the fee of the parent without invalidating the child would be to use CPFP on a different output from the parent, which will speed it up without replacing it with a different transaction.
+
+░░░░░▄▄██████▄▄
+░░▄████▀▀▀▀▀▀████▄
+░███▀░░░░░░░░░░▀█▀█
+███░░░▄██████▄▄░░░██
+░░░░░█████████░░░░██▌
+░░░░█████████████████
+░░░░█████████████████
+░░░░░████████████████
+███▄░░▀██████▀░░░███
+█▀█▄▄░░░░░░░░░░▄███
+░░▀████▄▄▄▄▄▄████▀
+░░░░░▀▀██████▀▀
+.ChipMixer.{ MIXING REINVENTED FOR YOUR PRIVACY #.ChipMixer.
+
+░░░░░▄▄██████▄▄
+░░▄████▀▀▀▀▀▀████▄
+░███▀░░░░░░░░░░▀█▀█
+███░░░▄██████▄▄░░░██
+░░░░░█████████░░░░██▌
+░░░░█████████████████
+░░░░█████████████████
+░░░░░████████████████
+███▄░░▀██████▀░░░███
+█▀█▄▄░░░░░░░░░░▄███
+░░▀████▄▄▄▄▄▄████▀
+░░░░░▀▀██████▀▀
+ranochigo
+Legendary
+*
+
+
+Activity: 2604
+Merit: 2975
+
+@ me if you need my response
+
+
+View Profile
+	
+Re: How do I double spend using electrum for fix unconfirmed transaction?
+April 20, 2021, 10:38:29 PM
+ #8
+There is actually a way. It would work only if the nodes have already purged your transaction from their mempool.
+
+Import your Blockchain.com wallet into Electrum, the one containing the transaction for your 10sat/byte transaction. Check if your transaction has a computer symbol on the left, right click and press Remove. Your transactions should be removed from the wallet and you can resend your transaction.
+
+The current minimum fee to enter the mempool is higher than the fee rates of your first transaction and that should result in most nodes purging your transaction.
+
+░░░░░▄▄██████▄▄
+░░▄████▀▀▀▀▀▀████▄
+░███▀░░░░░░░░░░▀█▀█
+███░░░▄██████▄▄░░░██
+░░░░░█████████░░░░██▌
+░░░░█████████████████
+░░░░█████████████████
+░░░░░████████████████
+███▄░░▀██████▀░░░███
+█▀█▄▄░░░░░░░░░░▄███
+░░▀████▄▄▄▄▄▄████▀
+░░░░░▀▀██████▀▀
+.ChipMixer.{ MIXING REINVENTED FOR YOUR PRIVACY #.ChipMixer.
+
+░░░░░▄▄██████▄▄
+░░▄████▀▀▀▀▀▀████▄
+░███▀░░░░░░░░░░▀█▀█
+███░░░▄██████▄▄░░░██
+░░░░░█████████░░░░██▌
+░░░░█████████████████
+░░░░█████████████████
+░░░░░████████████████
+███▄░░▀██████▀░░░███
+█▀█▄▄░░░░░░░░░░▄███
+░░▀████▄▄▄▄▄▄████▀
+░░░░░▀▀██████▀▀
+o_e_l_e_o
+Legendary
+*
+
+
+Activity: 1568
+Merit: 8933
+
+
+
+Wear a mask, slow the spread
+
+
+View Profile
+	
+Re: How do I double spend using electrum for fix unconfirmed transaction?
+April 21, 2021, 08:00:57 AM
+ #9
+Quote from: ranochigo on April 20, 2021, 10:38:29 PM
+There is actually a way. It would work only if the nodes have already purged your transaction from their mempool.
+Yeah, with the mempool filling up like this and the mempoolminfee increasing to around 16 sats/vbyte, OP's first transaction paying 10 sats/vbyte is now starting to be purged from some nodes. Looking it up on various block explorers comes up with around a 50/50 split of nodes which still have it in their mempool and nodes which have purged it. Since the first transaction is now being purged, you should be able to double spend it successfully which you were not able to do before while it was still in the mempool.
+
+Bear in mind however that the current fee needed for a fast transaction is around 200 sats/vbyte. Given your transaction has 28 inputs and a size of 4,174 vbytes, you would end up paying more than 0.008 BTC in fees, which is around 40% of the combined value of all your inputs.
+
+░░░░░▄▄██████▄▄
+░░▄████▀▀▀▀▀▀████▄
+░███▀░░░░░░░░░░▀█▀█
+███░░░▄██████▄▄░░░██
+░░░░░█████████░░░░██▌
+░░░░█████████████████
+░░░░█████████████████
+░░░░░████████████████
+███▄░░▀██████▀░░░███
+█▀█▄▄░░░░░░░░░░▄███
+░░▀████▄▄▄▄▄▄████▀
+░░░░░▀▀██████▀▀
+.ChipMixer.{ MIXING REINVENTED FOR YOUR PRIVACY #.ChipMixer.
+
+░░░░░▄▄██████▄▄
+░░▄████▀▀▀▀▀▀████▄
+░███▀░░░░░░░░░░▀█▀█
+███░░░▄██████▄▄░░░██
+░░░░░█████████░░░░██▌
+░░░░█████████████████
+░░░░█████████████████
+░░░░░████████████████
+███▄░░▀██████▀░░░███
+█▀█▄▄░░░░░░░░░░▄███
+░░▀████▄▄▄▄▄▄████▀
+░░░░░▀▀██████▀▀
+Pages: [1]	
+print
+Bitcoin Forum > Bitcoin > Development & Technical Discussion > Wallet software > Electrum > How do I double spend using electrum for fix unconfirmed transaction?
+« previous topic next topic »
+ 
+Jump to: 
+=====> Electrum
+  
+
+
+Quote
